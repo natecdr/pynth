@@ -19,18 +19,21 @@ class Oscillator:
             
         signal = np.concatenate((signal, release))
         signal = self.apply_gain(signal)
-
+        
         return signal
     
     def build_signal(self, f, time, sample_rate, release = False):
         index_increment = f * self.wavetable.n_samples / sample_rate
         
         signal = np.zeros(int(time * sample_rate))
-        for i in range(len(signal)):
-            signal[i] = interpolate_linearly(self.wavetable, self.wavetable.index)
-            signal[i] = self.envelope.apply_envelope(signal[i], i, sample_rate, release=release)
-            
-            self.wavetable.index = (self.wavetable.index + index_increment) % self.wavetable.n_samples
+        for isignal in range(0, len(signal), self.synth.BUFFER_SIZE):
+            buffer = np.zeros(min(len(signal) - isignal, self.synth.BUFFER_SIZE))
+            for ibuffer in range(len(buffer)):
+                buffer[ibuffer] = interpolate_linearly(self.wavetable, self.wavetable.index)
+                buffer[ibuffer] = self.envelope.apply_envelope(buffer[ibuffer], isignal + ibuffer, sample_rate, release=release)
+                
+                self.wavetable.index = (self.wavetable.index + index_increment) % self.wavetable.n_samples
+            signal[isignal:isignal+self.synth.BUFFER_SIZE] = buffer
             
         return signal
     
