@@ -5,6 +5,7 @@ class Wavetable:
         self.waveform = waveform
         self.n_samples = n_samples
         self.build_wavetable()
+        self.index = 0
         
     def build_wavetable(self):
         self.wavetable = np.zeros(self.n_samples)
