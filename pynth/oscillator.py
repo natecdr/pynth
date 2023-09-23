@@ -5,14 +5,14 @@ from pynth.envelope import Envelope
 from pynth.filter import Filter
 from pynth.utils import *
 
-import matplotlib.pyplot as plt
-
 class Oscillator:
     def __init__(self, synth):
+        super().__init__()
+        
         self.synth = synth
         self.wavetable = Wavetable(waveforms.sine)
         self.envelope = Envelope()
-        self.filter = Filter("highpass")
+        self.filter = Filter()
         self.gain = -10
         
     def output_signal(self, f, time, sample_rate):
@@ -48,4 +48,3 @@ class Oscillator:
     def apply_gain(self, signal):
         amplitude = 10 ** (self.gain/20)
         return signal * amplitude
-    
