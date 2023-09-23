@@ -1,6 +1,3 @@
-import numpy as np
-import matplotlib.pyplot as plt
-
 class Envelope:
     def __init__(self, attack = 0.1, decay = 0, sustain = 1, release = 0.1):
         self.attack = attack

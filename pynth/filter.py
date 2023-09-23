@@ -1,7 +1,7 @@
 import numpy as np
 
 class Filter:
-    def __init__(self, type = "lowpass", cutoff_frequency = 2000):
+    def __init__(self, type = "lowpass", cutoff_frequency = 20000):
         self.type = type
         self.cutoff_frequency = cutoff_frequency
         
