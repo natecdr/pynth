@@ -11,33 +11,27 @@ def run():
     
     osc1Box = createOsc1Box(oscBox)
     
-    ampEnvBox = Frame(oscBox, width = 200, height = 200, bg="red", border=1, highlightbackground="black", highlightthickness=2)
-    ampEnvBox.grid(row=0, column=2)
+    ampEnvBox = createAmpEnvBox(oscBox)
     
     osc2Box = createOsc2Box(oscBox)
     
     #Filter, LFO & ModEnvs
-    fxBox = Frame(window, width=1000, height=200, highlightbackground="black", highlightthickness=2)
-    fxBox.grid(row=1, column=0)
+    fxBox = createFxBox(window)
     
-    filterBox = Frame(fxBox, width=200, height=200, bg="yellow", highlightbackground="black", highlightthickness=2)
-    filterBox.grid(row=0, column = 0)
+    filterBox = createFilterBox(fxBox)
     
-    LFOBox = Frame(fxBox, width=200, height=200, bg="red", highlightbackground="black", highlightthickness=2)
-    LFOBox.grid(row=0, column = 1)
+    LFOBox = createLFOBox(fxBox)
 
-    modEnv1Box = Frame(fxBox, width=200, height=200, bg="cyan", highlightbackground="black", highlightthickness=2)
-    modEnv1Box.grid(row=0, column = 2)
-    
-    modEnv2Box = Frame(fxBox, width=200, height=200, bg="blue", highlightbackground="black", highlightthickness=2)
-    modEnv2Box.grid(row=0, column = 3)
-    
+    modEnv1Box = createModEnv1Box(fxBox)
+        
+    modEnv2Box = createModEnv2Box(fxBox)
+        
     #Keyboard & master 
-    keyBox = Frame(window, width=800, height=100)
-    keyBox.grid(row=2, column=0)
+    keyBox = createKeyBox(window)
     
     window.mainloop()
 
+#Oscillators & AmpEnv
 def createOscBox(window):
     oscBox = Frame(window, width=1000, height=200)
     oscBox.grid(row=0, column=0)
@@ -66,6 +60,49 @@ def createOsc2Box(oscBox):
         
     return osc2Box
 
+def createAmpEnvBox(oscBox):
+    ampEnvBox = Frame(oscBox, width = 200, height = 200, bg="red", border=1, highlightbackground="black", highlightthickness=2)
+    ampEnvBox.grid(row=0, column=2)
+    
+    return ampEnvBox
+
+#Filter, LFO & ModEnvs
+def createFxBox(window):
+    fxBox = Frame(window, width=1000, height=200, highlightbackground="black", highlightthickness=2)
+    fxBox.grid(row=1, column=0)
+    
+    return fxBox
+
+def createFilterBox(fxBox):
+    filterBox = Frame(fxBox, width=200, height=200, bg="yellow", highlightbackground="black", highlightthickness=2)
+    filterBox.grid(row=0, column = 0)
+    
+    return filterBox
+
+def createLFOBox(fxBox):
+    LFOBox = Frame(fxBox, width=200, height=200, bg="red", highlightbackground="black", highlightthickness=2)
+    LFOBox.grid(row=0, column = 1)
+    
+    return LFOBox
+
+def createModEnv1Box(fxBox):
+    modEnv1Box = Frame(fxBox, width=200, height=200, bg="cyan", highlightbackground="black", highlightthickness=2)
+    modEnv1Box.grid(row=0, column = 2)
+    
+    return modEnv1Box
+
+def createModEnv2Box(fxBox):
+    modEnv2Box = Frame(fxBox, width=200, height=200, bg="blue", highlightbackground="black", highlightthickness=2)
+    modEnv2Box.grid(row=0, column = 3)
+    
+    return modEnv2Box
+
+#Keyboard & master 
+def createKeyBox(window):
+    keyBox = Frame(window, width=800, height=100)
+    keyBox.grid(row=2, column=0)
+    
+    return keyBox
 
 if __name__ == "__main__" :
     run()
