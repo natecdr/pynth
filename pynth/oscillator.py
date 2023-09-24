@@ -48,3 +48,7 @@ class Oscillator:
     def apply_gain(self, signal):
         amplitude = 10 ** (self.gain/20)
         return signal * amplitude
+
+    def set_waveform(self, waveform):
+        self.wavetable = Wavetable(waveforms.get_waveform(waveform))
+        
