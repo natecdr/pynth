@@ -1,9 +1,6 @@
-from pynth.gui import run
+from pynth.gui import PynthGUI
 from pynth.pynth import Pynth
 
-run()
-
-pynth = Pynth()
-pynth.play(440, 1, 44100)
-
-
+# run()
+pynthGUI = PynthGUI()
+pynthGUI.mainloop()
