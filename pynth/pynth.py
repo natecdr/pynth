@@ -1,4 +1,5 @@
 from pynth.oscillator import Oscillator
+from pynth.envelope import Envelope
 import sounddevice as sd
 
 
@@ -6,6 +7,8 @@ class Pynth:
     BUFFER_SIZE = 1024
     
     def __init__(self):
+        self.ampEnv = Envelope()
+        
         self.osc1 = Oscillator(self)
         self.osc2 = Oscillator(self)
         
