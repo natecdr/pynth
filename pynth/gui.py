@@ -6,7 +6,7 @@ class PynthGUI(Tk):
     def __init__(self):
         super().__init__()
         
-        self.pynth = Pynth()
+        self.synth = Pynth()
         
         self.title("Pynth")
         self.config(bg="gray")
@@ -29,8 +29,6 @@ class PynthGUI(Tk):
         #Keyboard & master 
         self.keyBox = self._createKeyBox()
         
-        
-        
     #Oscillators & AmpEnv
     def _createOscBox(self):
         oscBox = Frame(self, width=1000, height=200)
@@ -46,12 +44,14 @@ class PynthGUI(Tk):
         title.grid(row=0, column=0)
         
         def onWaveformChange(event):
-            index = int(self.osc1Waveform.curselection()[0])
-            self.pynth.osc1.set_waveform(self.osc1Waveform.get(index))
+            w = event.widget
+            index = int(w.curselection()[0])
+            self.synth.osc1.set_waveform(w.get(index))
         
-        self.osc1Waveform = Listbox(osc1Box, listvariable=self.waveform_list, height=2, exportselection=False)
-        self.osc1Waveform.bind("<<ListboxSelect>>", onWaveformChange)
-        self.osc1Waveform.grid(row=1, column=0)
+        osc1Waveform = Listbox(osc1Box, listvariable=self.waveform_list, height=2, exportselection=False)
+        osc1Waveform.bind("<<ListboxSelect>>", onWaveformChange)
+        osc1Waveform.select_set(0)
+        osc1Waveform.grid(row=1, column=0)
         
         osc1Box.grid_propagate(False)
         
@@ -65,23 +65,61 @@ class PynthGUI(Tk):
         title.grid(row=0, column=0)
         
         def onWaveformChange(event):
-            index = int(self.osc2Waveform.curselection()[0])
-            self.pynth.osc2.set_waveform(self.osc2Waveform.get(index))
+            w = event.widget
+            index = int(w.curselection()[0])
+            self.synth.osc2.set_waveform(w.get(index))
         
-        self.osc2Waveform = Listbox(osc2Box, listvariable=self.waveform_list, height=2, exportselection=False)
-        self.osc2Waveform.bind("<<ListboxSelect>>", onWaveformChange)
-        self.osc2Waveform.grid(row=1, column=0)
-        
+        osc2Waveform = Listbox(osc2Box, listvariable=self.waveform_list, height=2, exportselection=False)
+        osc2Waveform.bind("<<ListboxSelect>>", onWaveformChange)
+        osc2Waveform.select_set(0)
+        osc2Waveform.grid(row=1, column=0)
+    
         osc2Box.grid_propagate(False)
             
         return osc2Box
     
     def _createAmpEnvBox(self):
-        ampEnvBox = Frame(self.oscBox, width = 200, height = 200, bg="red", border=1, highlightbackground="black", highlightthickness=2)
+        ampEnvBox = Frame(self.oscBox, width = 300, height = 200, bg="red", border=1, highlightbackground="black", highlightthickness=2)
         ampEnvBox.grid(row=0, column=2)
         
         title = Label(ampEnvBox, text="ampEnv")
         title.grid(row=0, column=0)
+        
+        def onAttackChange(val):
+            self.synth.ampEnv.attack = float(val)
+            
+        attackSlider = Scale(ampEnvBox, from_= 1, to=0, orient=VERTICAL, resolution=0.01, command=onAttackChange)
+        attackSlider.set(self.synth.ampEnv.attack)
+        attackSlider.grid(row=2, column=0)
+        attackLabel = Label(ampEnvBox, text="A")
+        attackLabel.grid(row=3, column=0)
+        
+        def onDecayChange(val):
+            self.synth.ampEnv.decay = float(val)
+        
+        decaySlider = Scale(ampEnvBox, from_= 1, to=0, orient=VERTICAL, resolution=0.01, command=onDecayChange)
+        decaySlider.set(self.synth.ampEnv.decay)
+        decaySlider.grid(row=2, column=1)
+        decayLabel = Label(ampEnvBox, text="D")
+        decayLabel.grid(row=3, column=1)
+        
+        def onSustainChange(val):
+            self.synth.ampEnv.sustain = float(val)
+        
+        sustainSlider = Scale(ampEnvBox, from_= 1, to=0, orient=VERTICAL, resolution=0.01, command=onSustainChange)
+        sustainSlider.set(self.synth.ampEnv.sustain)
+        sustainSlider.grid(row=2, column=2)
+        sustainLabel = Label(ampEnvBox, text="S")
+        sustainLabel.grid(row=3, column=2)
+        
+        def onReleaseChange(val):
+            self.synth.ampEnv.release = float(val)
+        
+        releaseSlider = Scale(ampEnvBox, from_= 1, to=0, orient=VERTICAL, resolution=0.01, command=onReleaseChange)
+        releaseSlider.set(self.synth.ampEnv.release)
+        releaseSlider.grid(row=2, column=3)
+        releaseLabel = Label(ampEnvBox, text="R")
+        releaseLabel.grid(row=3, column=3)
         
         ampEnvBox.grid_propagate(False)
         
@@ -158,154 +196,8 @@ class PynthGUI(Tk):
         return keyBox
     
     def play(self):
-        self.pynth.play(self.pitchSlider.get(), 1, 44100)
+        self.synth.play(self.pitchSlider.get(), 1, 44100)
         
-    
-
-# def run():
-#     #Window setup
-#     window = Tk()
-#     window.title("Pynth")
-#     window.config(bg="gray")    
-    
-#     #Oscillators & AmpEnv
-#     oscBox = createOscBox(window)
-    
-#     osc1Box = createOsc1Box(oscBox)
-    
-#     ampEnvBox = createAmpEnvBox(oscBox)
-    
-#     osc2Box = createOsc2Box(oscBox)
-    
-#     #Filter, LFO & ModEnvs
-#     fxBox = createFxBox(window)
-    
-#     filterBox = createFilterBox(fxBox)
-    
-#     LFOBox = createLFOBox(fxBox)
-
-#     modEnv1Box = createModEnv1Box(fxBox)
-        
-#     modEnv2Box = createModEnv2Box(fxBox)
-        
-#     #Keyboard & master 
-#     keyBox = createKeyBox(window)
-    
-#     #Mainloop
-#     window.mainloop()
-
-#Oscillators & AmpEnv
-# def createOscBox(window):
-#     oscBox = Frame(window, width=1000, height=200)
-#     oscBox.grid(row=0, column=0)
-    
-#     return oscBox
-
-# def createOsc1Box(oscBox):
-#     osc1Box = Frame(oscBox, width = 300, height = 200, bg="purple", highlightbackground="black", highlightthickness=2)
-#     osc1Box.grid(row=0, column=1)
-    
-#     title = Label(osc1Box, text="osc1")
-#     title.grid(row=0, column=0)
-    
-#     osc1Box.grid_propagate(False)
-    
-#     return osc1Box
-
-# def createOsc2Box(oscBox):
-#     osc2Box = Frame(oscBox, width = 300, height = 200, bg="green", highlightbackground="black", highlightthickness=2)
-#     osc2Box.grid(row=0, column=3)
-    
-#     title = Label(osc2Box, text="osc2")
-#     title.grid(row=0, column=0)
-    
-#     osc2Box.grid_propagate(False)
-        
-#     return osc2Box
-
-# def createAmpEnvBox(oscBox):
-#     ampEnvBox = Frame(oscBox, width = 200, height = 200, bg="red", border=1, highlightbackground="black", highlightthickness=2)
-#     ampEnvBox.grid(row=0, column=2)
-    
-#     title = Label(ampEnvBox, text="ampEnv")
-#     title.grid(row=0, column=0)
-    
-#     ampEnvBox.grid_propagate(False)
-    
-#     return ampEnvBox
-
-#Filter, LFO & ModEnvs
-# def createFxBox(window):
-#     fxBox = Frame(window, width=1000, height=200, highlightbackground="black", highlightthickness=2)
-#     fxBox.grid(row=1, column=0)
-    
-#     return fxBox
-
-# def createFilterBox(fxBox):
-#     filterBox = Frame(fxBox, width=200, height=200, bg="yellow", highlightbackground="black", highlightthickness=2)
-#     filterBox.grid(row=0, column = 0)
-    
-#     title = Label(filterBox, text="filter")
-#     title.grid(row=0, column=0)
-    
-#     filterBox.grid_propagate(False)
-    
-#     return filterBox
-
-# def createLFOBox(fxBox):
-#     LFOBox = Frame(fxBox, width=200, height=200, bg="red", highlightbackground="black", highlightthickness=2)
-#     LFOBox.grid(row=0, column = 1)
-    
-#     title = Label(LFOBox, text="LFO")
-#     title.grid(row=0, column=0)
-    
-#     LFOBox.grid_propagate(False)
-    
-#     return LFOBox
-
-# def createModEnv1Box(fxBox):
-#     modEnv1Box = Frame(fxBox, width=200, height=200, bg="cyan", highlightbackground="black", highlightthickness=2)
-#     modEnv1Box.grid(row=0, column = 2)
-    
-#     title = Label(modEnv1Box, text="modEnv1")
-#     title.grid(row=0, column=0)
-    
-#     modEnv1Box.grid_propagate(False)
-    
-#     return modEnv1Box
-
-# def createModEnv2Box(fxBox):
-#     modEnv2Box = Frame(fxBox, width=200, height=200, bg="blue", highlightbackground="black", highlightthickness=2)
-#     modEnv2Box.grid(row=0, column = 3)
-    
-#     title = Label(modEnv2Box, text="modEnv2")
-#     title.grid(row=0, column=0)
-    
-#     modEnv2Box.grid_propagate(False)
-    
-#     return modEnv2Box
-
-#Keyboard & master 
-def createKeyBox(window):
-    keyBox = Frame(window, width=800, height=100)
-    keyBox.grid(row=2, column=0)
-    
-    title = Label(keyBox, text="keyboard")
-    title.grid(row=0, column=0)
-    
-    pitchSlider = Scale(keyBox, from_= 110, to=4186, orient=HORIZONTAL)
-    pitchSlider.grid(row=2, column=0)
-    
-    def playCallback():
-        pynth.play(pitchSlider.get(), 1, 44100)
-    
-    playButton = Button(keyBox, text = "Play", command = playCallback)
-    playButton.grid(row=1, column=0, sticky="NSEw")
-    
-    keyBox.grid_propagate(False)
-    
-    return keyBox
-
 if __name__ == "__main__" :
     # run()
     pynthGUI = PynthGUI()

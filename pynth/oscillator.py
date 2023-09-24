@@ -5,21 +5,26 @@ from pynth.envelope import Envelope
 from pynth.filter import Filter
 from pynth.utils import *
 
+import matplotlib.pyplot as plt
+
 class Oscillator:
     def __init__(self, synth):
         super().__init__()
         
         self.synth = synth
         self.wavetable = Wavetable(waveforms.sine)
-        self.envelope = Envelope()
+        self.ampEnv = synth.ampEnv
         self.filter = Filter()
         self.gain = -10
         
     def output_signal(self, f, time, sample_rate):
         signal = self.build_signal(f, time, sample_rate)
-        release = self.build_signal(f, self.envelope.release, sample_rate, release=True)
+        release = self.build_signal(f, self.ampEnv.release, sample_rate, release=True)
             
         signal = np.concatenate((signal, release))
+        
+        plt.plot(np.abs(signal))
+        plt.show()
         signal = self.apply_gain(signal)
         
         return signal
@@ -38,7 +43,7 @@ class Oscillator:
         buffer = np.zeros(min(len(signal) - isignal, self.synth.BUFFER_SIZE))
         for ibuffer in range(len(buffer)):
             buffer[ibuffer] = interpolate_linearly(self.wavetable, self.wavetable.index)
-            buffer[ibuffer] = self.envelope.apply_envelope(buffer[ibuffer], isignal + ibuffer, sample_rate, release=release)
+            buffer[ibuffer] = self.ampEnv.apply_envelope(buffer[ibuffer], isignal + ibuffer, sample_rate, release=release)
             
             self.wavetable.index = (self.wavetable.index + index_increment) % self.wavetable.n_samples
         
