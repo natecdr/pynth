@@ -4,6 +4,7 @@ from pynth.wavetable import Wavetable
 from pynth.envelope import Envelope
 from pynth.filter import Filter
 from pynth.utils import *
+from pynth.parameter_types import FloatParameter
 
 class Oscillator:
     def __init__(self, synth):
@@ -14,6 +15,7 @@ class Oscillator:
         self.ampEnv = synth.ampEnv
         self.filter = synth.filter
         self.gain = -10
+        self.volume = FloatParameter(1, (0, 1))
         
     def output_signal(self, f, time, sample_rate):
         signal = self.build_signal(f, time, sample_rate)
@@ -48,7 +50,7 @@ class Oscillator:
     
     def apply_gain(self, signal):
         amplitude = 10 ** (self.gain/20)
-        return signal * amplitude
+        return signal * amplitude * self.volume.value
 
     def set_waveform(self, waveform):
         self.wavetable = Wavetable(waveforms.get_waveform(waveform))
