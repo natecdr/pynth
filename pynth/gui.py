@@ -12,7 +12,7 @@ class PynthGUI(Tk):
         self.title("Pynth")
         self.config(bg="gray")
         
-        self.waveform_list = Variable(value=["sine", "saw"])
+        self.waveform_list = Variable(value=["sine", "saw", "square", "triangle"])
         
         #Oscillators & AmpEnv
         self.oscBox = self._createOscBox()
@@ -57,6 +57,9 @@ class PynthGUI(Tk):
         osc1VolumeSlider = Slider(osc1Box, orient=VERTICAL, resolution=0.01, synth_parameter=self.synth.osc1.volume)
         osc1VolumeSlider.grid(row=1, column=1)
         
+        osc1PhaseSlider = Slider(osc1Box, orient=HORIZONTAL, synth_parameter=self.synth.osc1.wavetable.phase)
+        osc1PhaseSlider.grid(row=2, column=0)
+        
         osc1Box.grid_propagate(False)
         
         return osc1Box
@@ -80,6 +83,9 @@ class PynthGUI(Tk):
         
         osc2VolumeSlider = Slider(osc2Box, orient=VERTICAL, resolution=0.01, synth_parameter=self.synth.osc2.volume)
         osc2VolumeSlider.grid(row=1, column=1)
+        
+        osc1PhaseSlider = Slider(osc2Box, orient=HORIZONTAL, synth_parameter=self.synth.osc2.wavetable.phase)
+        osc1PhaseSlider.grid(row=2, column=0)
     
         osc2Box.grid_propagate(False)
             
@@ -192,7 +198,7 @@ class PynthGUI(Tk):
         return keyBox
     
     def play(self):
-        self.synth.play(self.pitchSlider.get(), 1, 44100)
+        self.synth.play(self.pitchSlider.get(), 1)
         
 if __name__ == "__main__" :
     # run()

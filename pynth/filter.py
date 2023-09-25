@@ -10,8 +10,6 @@ class Filter:
     
     def apply_filter(self, signal, sample_rate):
         filter_output = np.zeros_like(signal)
-        # break_frequency = self.cutoff_frequency.value
-        # tan = np.tan(np.pi * break_frequency / sample_rate)
         tan = np.tan(np.pi * self.cutoff_frequency.value / sample_rate)
         a1 = (tan - 1) / (tan + 1)
         
