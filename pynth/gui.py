@@ -121,6 +121,11 @@ class PynthGUI(Tk):
         filterBox = Frame(self.fxBox, width=200, height=200, bg="yellow", highlightbackground="black", highlightthickness=2)
         filterBox.grid(row=0, column = 0)
         
+        cutoffSlider = Slider(filterBox, orient=HORIZONTAL, synth_parameter=self.synth.filter.cutoff_frequency)
+        cutoffSlider.grid(row=1, column=0)
+        cutoffLabel = Label(filterBox, text="cutoff")
+        cutoffLabel.grid(row = 2, column=0)
+        
         title = Label(filterBox, text="filter")
         title.grid(row=0, column=0)
         

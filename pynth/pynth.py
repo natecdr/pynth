@@ -1,5 +1,6 @@
 from pynth.oscillator import Oscillator
 from pynth.envelope import Envelope
+from pynth.filter import Filter
 import sounddevice as sd
 
 
@@ -8,6 +9,7 @@ class Pynth:
     
     def __init__(self):
         self.ampEnv = Envelope()
+        self.filter = Filter()
         
         self.osc1 = Oscillator(self)
         self.osc2 = Oscillator(self)

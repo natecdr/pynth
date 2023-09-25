@@ -12,7 +12,7 @@ class Oscillator:
         self.synth = synth
         self.wavetable = Wavetable(waveforms.sine)
         self.ampEnv = synth.ampEnv
-        self.filter = Filter()
+        self.filter = synth.filter
         self.gain = -10
         
     def output_signal(self, f, time, sample_rate):
