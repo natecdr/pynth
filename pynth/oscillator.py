@@ -5,8 +5,6 @@ from pynth.envelope import Envelope
 from pynth.filter import Filter
 from pynth.utils import *
 
-import matplotlib.pyplot as plt
-
 class Oscillator:
     def __init__(self, synth):
         super().__init__()
@@ -19,12 +17,10 @@ class Oscillator:
         
     def output_signal(self, f, time, sample_rate):
         signal = self.build_signal(f, time, sample_rate)
-        release = self.build_signal(f, self.ampEnv.release, sample_rate, release=True)
+        release_signal = self.build_signal(f, self.ampEnv.release.value, sample_rate, release=True)
             
-        signal = np.concatenate((signal, release))
+        signal = np.concatenate((signal, release_signal))
         
-        plt.plot(np.abs(signal))
-        plt.show()
         signal = self.apply_gain(signal)
         
         return signal

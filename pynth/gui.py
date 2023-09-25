@@ -1,6 +1,7 @@
 from tkinter import *
 from tkdial import Dial
 from pynth.pynth import Pynth
+from pynth.controls import Slider
 
 class PynthGUI(Tk):
     def __init__(self):
@@ -84,39 +85,23 @@ class PynthGUI(Tk):
         
         title = Label(ampEnvBox, text="ampEnv")
         title.grid(row=0, column=0)
-        
-        def onAttackChange(val):
-            self.synth.ampEnv.attack = float(val)
             
-        attackSlider = Scale(ampEnvBox, from_= 1, to=0, orient=VERTICAL, resolution=0.01, command=onAttackChange)
-        attackSlider.set(self.synth.ampEnv.attack)
+        attackSlider = Slider(ampEnvBox, orient=VERTICAL, resolution=0.01, synth_parameter=self.synth.ampEnv.attack)
         attackSlider.grid(row=2, column=0)
         attackLabel = Label(ampEnvBox, text="A")
         attackLabel.grid(row=3, column=0)
         
-        def onDecayChange(val):
-            self.synth.ampEnv.decay = float(val)
-        
-        decaySlider = Scale(ampEnvBox, from_= 1, to=0, orient=VERTICAL, resolution=0.01, command=onDecayChange)
-        decaySlider.set(self.synth.ampEnv.decay)
+        decaySlider = Slider(ampEnvBox, orient=VERTICAL, resolution=0.01, synth_parameter=self.synth.ampEnv.decay)
         decaySlider.grid(row=2, column=1)
         decayLabel = Label(ampEnvBox, text="D")
         decayLabel.grid(row=3, column=1)
         
-        def onSustainChange(val):
-            self.synth.ampEnv.sustain = float(val)
-        
-        sustainSlider = Scale(ampEnvBox, from_= 1, to=0, orient=VERTICAL, resolution=0.01, command=onSustainChange)
-        sustainSlider.set(self.synth.ampEnv.sustain)
+        sustainSlider = Slider(ampEnvBox, orient=VERTICAL, resolution=0.01, synth_parameter=self.synth.ampEnv.sustain)
         sustainSlider.grid(row=2, column=2)
         sustainLabel = Label(ampEnvBox, text="S")
         sustainLabel.grid(row=3, column=2)
         
-        def onReleaseChange(val):
-            self.synth.ampEnv.release = float(val)
-        
-        releaseSlider = Scale(ampEnvBox, from_= 1, to=0, orient=VERTICAL, resolution=0.01, command=onReleaseChange)
-        releaseSlider.set(self.synth.ampEnv.release)
+        releaseSlider = Slider(ampEnvBox, orient=VERTICAL, resolution=0.01, synth_parameter=self.synth.ampEnv.release)
         releaseSlider.grid(row=2, column=3)
         releaseLabel = Label(ampEnvBox, text="R")
         releaseLabel.grid(row=3, column=3)
