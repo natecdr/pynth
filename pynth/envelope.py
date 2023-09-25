@@ -1,7 +1,7 @@
 from pynth.parameter_types import FloatParameter
 
 class Envelope:
-    def __init__(self, attack = 0.1, decay = 0, sustain = 1, release = 0.1):
+    def __init__(self, attack = 0, decay = 0, sustain = 1, release = 0.1):
         self.attack = FloatParameter(attack, (0, 1))
         self.decay = FloatParameter(decay, (0, 1))
         self.sustain = FloatParameter(sustain, (0, 1))

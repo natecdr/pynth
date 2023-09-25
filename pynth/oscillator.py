@@ -45,7 +45,7 @@ class Oscillator:
             
             self.wavetable.index = (self.wavetable.index + index_increment) % self.wavetable.n_samples
         
-        buffer = self.filter.apply_filter(buffer, sample_rate)
+        # buffer = self.filter.apply_filter(buffer, sample_rate)
         return buffer
     
     def apply_gain(self, signal):
@@ -53,5 +53,5 @@ class Oscillator:
         return signal * amplitude * self.volume.value
 
     def set_waveform(self, waveform):
-        self.wavetable = Wavetable(waveforms.get_waveform(waveform))
+        self.wavetable.set_waveform(waveforms.get_waveform(waveform))
         
