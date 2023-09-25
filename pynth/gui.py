@@ -54,6 +54,9 @@ class PynthGUI(Tk):
         osc1Waveform.select_set(0)
         osc1Waveform.grid(row=1, column=0)
         
+        osc1VolumeSlider = Slider(osc1Box, orient=VERTICAL, resolution=0.01, synth_parameter=self.synth.osc1.volume)
+        osc1VolumeSlider.grid(row=1, column=1)
+        
         osc1Box.grid_propagate(False)
         
         return osc1Box
@@ -74,6 +77,9 @@ class PynthGUI(Tk):
         osc2Waveform.bind("<<ListboxSelect>>", onWaveformChange)
         osc2Waveform.select_set(0)
         osc2Waveform.grid(row=1, column=0)
+        
+        osc2VolumeSlider = Slider(osc2Box, orient=VERTICAL, resolution=0.01, synth_parameter=self.synth.osc2.volume)
+        osc2VolumeSlider.grid(row=1, column=1)
     
         osc2Box.grid_propagate(False)
             
