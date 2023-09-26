@@ -201,6 +201,5 @@ class PynthGUI(Tk):
         self.synth.play(self.pitchSlider.get(), 1)
         
 if __name__ == "__main__" :
-    # run()
     pynthGUI = PynthGUI()
     pynthGUI.mainloop()

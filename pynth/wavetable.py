@@ -21,8 +21,5 @@ class Wavetable:
         for i in range(self.n_samples):
             self.wavetable[i] = self.waveform(2 * np.pi * i/self.n_samples)
             
-        # plt.plot(self.wavetable, ".")
-        # plt.show()
-    
     def __getitem__(self, index):
         return self.wavetable[(index + int(self.phase.value/360 * self.n_samples)) % self.n_samples]
