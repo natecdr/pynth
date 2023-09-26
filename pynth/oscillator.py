@@ -17,9 +17,9 @@ class Oscillator:
         self.gain = -10
         self.volume = FloatParameter(1, (0, 1))
         
-    def output_signal(self, f, time, sample_rate):
-        signal = self.build_signal(f, time, sample_rate)
-        release_signal = self.build_signal(f, self.ampEnv.release.value, sample_rate, release=True)
+    def output_signal(self, f, time):
+        signal = self.build_signal(f, time)
+        release_signal = self.build_signal(f, self.ampEnv.release.value, release=True)
             
         signal = np.concatenate((signal, release_signal))
         
@@ -27,25 +27,25 @@ class Oscillator:
         
         return signal
     
-    def build_signal(self, f, time, sample_rate, release = False):
-        index_increment = f * self.wavetable.n_samples / sample_rate
+    def build_signal(self, f, time, release = False):
+        index_increment = f * self.wavetable.n_samples / self.synth.SAMPLE_RATE
 
-        signal = np.zeros(int(time * sample_rate))
+        signal = np.zeros(int(time * self.synth.SAMPLE_RATE))
         for isignal in range(0, len(signal), self.synth.BUFFER_SIZE):
-            buffer = self.build_buffer(signal, isignal, sample_rate, index_increment, release)
+            buffer = self.build_buffer(signal, isignal, index_increment, release)
             signal[isignal:isignal+self.synth.BUFFER_SIZE] = buffer
             
         return signal
     
-    def build_buffer(self, signal, isignal, sample_rate, index_increment, release):
-        buffer = np.zeros(min(len(signal) - isignal, self.synth.BUFFER_SIZE))
+    def build_buffer(self, signal, isignal, index_increment, release):
+        buffer = np.zeros(min(len(signal) - isignal, self.synth.BUFFER_SIZE)) # Initialize buffer
         for ibuffer in range(len(buffer)):
             buffer[ibuffer] = interpolate_linearly(self.wavetable, self.wavetable.index)
-            buffer[ibuffer] = self.ampEnv.apply_envelope(buffer[ibuffer], isignal + ibuffer, sample_rate, release=release)
+            buffer[ibuffer] = self.ampEnv.apply_envelope(buffer[ibuffer], isignal + ibuffer, self.synth.SAMPLE_RATE, release=release)
             
             self.wavetable.index = (self.wavetable.index + index_increment) % self.wavetable.n_samples
         
-        # buffer = self.filter.apply_filter(buffer, sample_rate)
+        # buffer = self.filter.apply_filter(buffer, self.synth.SAMPLE_RATE)
         return buffer
     
     def apply_gain(self, signal):

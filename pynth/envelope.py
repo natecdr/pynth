@@ -1,11 +1,12 @@
 from pynth.parameter_types import FloatParameter
 
 class Envelope:
-    def __init__(self, attack = 0, decay = 0, sustain = 1, release = 0.1):
+    def __init__(self, attack = 0, decay = 0, sustain = 1, release = 0.1, links = []):
         self.attack = FloatParameter(attack, (0, 1))
         self.decay = FloatParameter(decay, (0, 1))
         self.sustain = FloatParameter(sustain, (0, 1))
         self.release = FloatParameter(release, (0, 1))
+        self.links = links
         
     def apply_envelope(self, value, index, sample_rate, release = False):
         time = index / sample_rate
