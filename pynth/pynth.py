@@ -19,10 +19,6 @@ class Pynth:
         self.osc1 = Oscillator(self)
         self.osc2 = Oscillator(self)
         
-        self.modEnv1 = Envelope()
-        self.modEnv2 = Envelope()
-        
-        
     def play(self, f, time):
         osc1_signal = self.osc1.output_signal(f, time)
         osc2_signal = self.osc2.output_signal(f, time)
