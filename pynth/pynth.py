@@ -13,14 +13,15 @@ class Pynth:
     
     def __init__(self):
         
-        self.ampEnv = Envelope()
-        self.filter = Filter()
+        # self.filter = Filter()
         
         self.osc1 = Oscillator(self)
         self.osc2 = Oscillator(self)
         
-        self.ampEnv1 = Envelope()
-        self.ampEnv2 = Envelope()
+        self.ampEnv = Envelope()
+        
+        self.modEnv1 = Envelope()
+        self.modEnv2 = Envelope()
         
     def play(self, f, time):
         osc1_signal = self.osc1.output_signal(f, time)
