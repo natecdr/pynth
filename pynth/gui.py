@@ -181,9 +181,9 @@ class PynthGUI(Tk):
         title = Label(keyBox, text="keyboard")
         title.grid(row=0, column=0)
         
-        self.pitchSlider = Scale(keyBox, from_= 110, to=4186, orient=HORIZONTAL)
-        self.pitchSlider.set(440)
-        self.pitchSlider.grid(row=2, column=0)
+        pitchSlider = Slider(keyBox, orient=HORIZONTAL, resolution=0.01, synth_parameter=self.synth.frequency)
+        pitchSlider.set(440)
+        pitchSlider.grid(row=2, column=0)
         
         playButton = Button(keyBox, text = "Play", command = self.play)
         playButton.grid(row=1, column=0, sticky="NSEw")
@@ -193,7 +193,7 @@ class PynthGUI(Tk):
         return keyBox
     
     def play(self):
-        self.synth.play(self.pitchSlider.get(), 1)
+        self.synth.play(1)
         
 if __name__ == "__main__" :
     pynthGUI = PynthGUI()

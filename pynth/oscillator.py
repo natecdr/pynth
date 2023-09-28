@@ -15,8 +15,6 @@ class Oscillator:
         self.gain = -10
         self.volume = FloatParameter(1, (0, 1))
         
-        self.frequency = FloatParameter(440, (20, 20000))
-
     def output_signal(self, f, time):
         signal = self.build_signal(f, time)
         signal = self.apply_gain(signal)
@@ -57,6 +55,6 @@ class Oscillator:
         self.wavetable.set_waveform(waveforms.get_waveform(waveform))
         
     def __next__(self):
-        index_increment = self.frequency.value * self.wavetable.n_samples / self.synth.SAMPLE_RATE
+        index_increment = self.synth.frequency.value * self.wavetable.n_samples / self.synth.SAMPLE_RATE
         val = self.wavetable[self.wavetable.index + index_increment]
         return val

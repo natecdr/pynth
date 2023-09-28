@@ -3,6 +3,7 @@ from pynth.envelope import Envelope
 from pynth.filter import Filter
 import pynth.waveforms as waveforms
 from pynth.utils import *
+from pynth.parameter_types import FloatParameter
 import sounddevice as sd
 from scipy.fft import fft, fftfreq
 
@@ -23,9 +24,12 @@ class Pynth:
         self.modEnv1 = Envelope()
         self.modEnv2 = Envelope()
         
-    def play(self, f, time):
-        osc1_signal = self.osc1.output_signal(f, time)
-        osc2_signal = self.osc2.output_signal(f, time)
+        self.is_playing = False
+        self.frequency = FloatParameter(440, (110, 4181))
+        
+    def play(self, time):
+        osc1_signal = self.osc1.output_signal(self.frequency.value, time)
+        osc2_signal = self.osc2.output_signal(self.frequency.value, time)
         
         signal = osc1_signal + osc2_signal
         
