@@ -16,10 +16,9 @@ class Wavetable:
         self.build_wavetable()
             
     def build_wavetable(self):
-        self.wavetable = np.zeros(self.n_samples)
-        
-        for i in range(self.n_samples):
-            self.wavetable[i] = self.waveform(2 * np.pi * i/self.n_samples)
-            
+        self.wavetable = [self.waveform(2 * np.pi * i / self.n_samples) for i in range(self.n_samples)]
+                    
     def __getitem__(self, index):
-        return self.wavetable[(index + int(self.phase.value/360 * self.n_samples)) % self.n_samples]
+        self.index = int((index + int(self.phase.value/360 * self.n_samples)) % self.n_samples)
+        return self.wavetable[self.index]
+    
