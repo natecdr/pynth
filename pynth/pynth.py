@@ -18,7 +18,7 @@ class Pynth:
         self.osc1 = Oscillator(self)
         self.osc2 = Oscillator(self)
         
-        self.ampEnv = Envelope()
+        self.ampEnv = Envelope(links=[self.osc1.volume])
         
         self.modEnv1 = Envelope()
         self.modEnv2 = Envelope()
