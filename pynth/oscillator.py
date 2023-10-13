@@ -27,25 +27,11 @@ class Oscillator:
             signal[i] = next(self)
             
         return signal
-
-    # def build_signal(self, f, time, release = False):
-    #     index_increment = f * self.wavetable.n_samples / self.synth.SAMPLE_RATE
-
-    #     signal = np.zeros(int(time * self.synth.SAMPLE_RATE))
-    #     for isignal in range(0, len(signal), self.synth.BUFFER_SIZE):
-    #         buffer = self.build_buffer(signal, isignal, index_increment, release)
-    #         signal[isignal:isignal+self.synth.BUFFER_SIZE] = buffer
-
-    #     return signal
-
-    # def build_buffer(self, signal, isignal, index_increment, release):
-    #     buffer = np.zeros(min(len(signal) - isignal, self.synth.BUFFER_SIZE)) # Initialize buffer
-    #     for ibuffer in range(len(buffer)):
-    #         buffer[ibuffer] = interpolate_linearly(self.wavetable, self.wavetable.index)
-
-    #         self.wavetable.index = (self.wavetable.index + index_increment) % self.wavetable.n_samples
-
-    #     return buffer
+    
+    def chunks(self):
+        while True:
+            chunk = [next(self) for _ in range(self.synth.BUFFER_SIZE)]
+            yield chunk 
 
     def apply_gain(self, signal):
         amplitude = 10 ** (self.gain/20)

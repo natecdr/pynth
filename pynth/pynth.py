@@ -7,13 +7,13 @@ from pynth.parameter_types import FloatParameter
 import sounddevice as sd
 from scipy.fft import fft, fftfreq
 
+import time
 
 class Pynth:
     BUFFER_SIZE = 1024
     SAMPLE_RATE = 48000
     
     def __init__(self):
-        
         # self.filter = Filter()
         
         self.osc1 = Oscillator(self)
@@ -24,19 +24,32 @@ class Pynth:
         self.modEnv1 = Envelope()
         self.modEnv2 = Envelope()
         
-        self.is_playing = False
         self.frequency = FloatParameter(440, (110, 4181))
         
-    def play(self, time):
-        osc1_signal = self.osc1.output_signal(self.frequency.value, time)
-        osc2_signal = self.osc2.output_signal(self.frequency.value, time)
+        # for _ in range(10):
+        #     self.play_sample(next(self.osc1.chunks()))
+        
+    def play(self, t):
+        start = time.time()
+        osc1_signal = self.osc1.output_signal(self.frequency.value, t)
+        osc2_signal = self.osc2.output_signal(self.frequency.value, t)
+        print("Time building sigs :", time.time()-start)
+        
         
         signal = osc1_signal + osc2_signal
         
-        self.plot_waves(osc1_signal, osc2_signal)
+        # self.plot_waves(osc1_signal, osc2_signal)
         
         sd.play(signal, self.SAMPLE_RATE)
-        sd.wait()
+        # sd.wait()
+        
+    def play_sample(self, sample):
+        sd.play(sample, self.SAMPLE_RATE)
+        # sd.wait()
+        
+    def stop_playing(self):
+        print("Stopped playing")
+        sd.stop()
         
     def plot_waves(self, osc1_signal, osc2_signal):
         till = 100

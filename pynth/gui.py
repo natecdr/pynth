@@ -185,15 +185,21 @@ class PynthGUI(Tk):
         pitchSlider.set(440)
         pitchSlider.grid(row=2, column=0)
         
-        playButton = Button(keyBox, text = "Play", command = self.play)
+        def play_button_pressed(event):
+            self.synth.play(1)
+            
+        def play_button_released(event):
+            self.synth.stop_playing()
+        
+        playButton = Button(keyBox, text = "Play")
         playButton.grid(row=1, column=0, sticky="NSEw")
+        
+        playButton.bind("<ButtonPress-1>", play_button_pressed)
+        playButton.bind("<ButtonRelease-1>", play_button_released)
         
         keyBox.grid_propagate(False)
         
         return keyBox
-    
-    def play(self):
-        self.synth.play(1)
         
 if __name__ == "__main__" :
     pynthGUI = PynthGUI()
