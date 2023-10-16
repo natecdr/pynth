@@ -1,7 +1,8 @@
 from pynth.parameter_types import FloatParameter
 
 class Envelope:
-    def __init__(self, attack = 0, decay = 0, sustain = 1, release = 0.1, links = []):
+    def __init__(self, synth, attack = 0, decay = 0, sustain = 1, release = 0.1, links = []):
+        self.synth = synth
         self.attack = FloatParameter(attack, (0, 1))
         self.decay = FloatParameter(decay, (0, 1))
         self.sustain = FloatParameter(sustain, (0, 1))
@@ -12,25 +13,38 @@ class Envelope:
         time = index / sample_rate
         
         if release:
-            return self.apply_release(value, time)
+            return self.get_release(value, time) * value
         
         if time < self.attack.value:
-            return self.apply_attack(value, time)
+            return self.get_attack(value, time) * value
         elif time < self.attack.value + self.decay.value:
-            return self.apply_decay(value, time)
+            return self.get_decay(value, time) * value
         else:
             return value * self.sustain.value
         
-    def apply_release(self, value, time):
-        return (1 - time/self.release.value) * self.sustain.value * value
+    def get_envelope_value(self, index, sample_rate, release = False):
+        time = index / sample_rate
         
-    def apply_attack(self, value, time):
-        return time/self.attack.value * value
+        if release:
+            return self.get_release(time)
+        
+        if time < self.attack.value:
+            return self.get_attack(time)
+        elif time < self.attack.value + self.decay.value:
+            return self.get_decay(time)
+        else:
+            return self.sustain.value
+        
+    def get_release(self, time):
+        return (1 - time/self.release.value) * self.sustain.value
+        
+    def get_attack(self, time):
+        return time/self.attack.value
     
-    def apply_decay(self, value, time):
+    def get_decay(self, time):
         decay_weight = (time - self.attack.value) / self.decay.value
         
         attenuation = (1 - (1 - self.sustain.value) * decay_weight)
         
-        return value * attenuation
+        return attenuation
         

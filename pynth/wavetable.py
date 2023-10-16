@@ -28,7 +28,7 @@ class Wavetable:
         return self._wavetable[lower_index] * lower_index_weight + self._wavetable[upper_index] * upper_index_weight
                     
     def __getitem__(self, index):
-        self.index = index % self.n_samples
-        phase_adjusted_index = (self.index + int(self.phase.value/360 * self.n_samples)) % self.n_samples
-        return self.interpolate_linearly(self, phase_adjusted_index)
+        index = index % self.n_samples
+        phase_adjusted_index = (index + int(self.phase.value/360 * self.n_samples)) % self.n_samples
+        return self.interpolate_linearly(self, phase_adjusted_index), index
     

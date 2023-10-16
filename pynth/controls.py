@@ -11,7 +11,7 @@ class Slider(Scale):
             
         super().__init__(*args, **kwargs, from_ = range_bottom, to=range_top, command=self.onChange)
         self.synth_parameter = synth_parameter
-        self.set(self.synth_parameter.value)
+        self.set(self.synth_parameter.base_value)
         
     def onChange(self, value):
-        self.synth_parameter.value = value
+        self.synth_parameter.base_value = value
