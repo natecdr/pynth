@@ -28,19 +28,22 @@ class Pynth:
         
         self.frequency = FloatParameter(440, (110, 4181))
         
-        self.voice = None
-        
-        # for _ in range(10):
-        #     self.play_sample(next(self.osc1.chunks()))
+        self.voices = []
         
     def play(self, duration):
-        self.voice = Voice(self, self.frequency)
+        self.voices.append(Voice(self, self.frequency))
         
         signal = np.zeros(int(duration*self.SAMPLE_RATE))
         for i in range(len(signal)):
-            signal[i] = next(self.voice)
+            signal[i] = np.sum([next(voice) for voice in self.voices])
             
-        # signal = self.voice.render_signal(duration)
+        self.voices[0].set_released()
+            
+        release_signal = np.zeros(int(self.voices[0].ampEnvVoice.envelope.release.value*self.SAMPLE_RATE))
+        for i in range(len(release_signal)):
+            release_signal[i] = np.sum([next(voice) for voice in self.voices])
+            
+        signal = np.concatenate((signal, release_signal))
         
         sd.play(signal, self.SAMPLE_RATE)
         
@@ -50,8 +53,9 @@ class Pynth:
         
     def stop_playing(self):
         sd.stop()
-        self.voice.clear_osc_voices()
-        self.voice = None
+        for voice in self.voices:
+            voice.clear_osc_voices()
+        self.voices = []
         
     def plot_waves(self, osc1_signal, osc2_signal):
         def my_fft(sig):
@@ -72,7 +76,7 @@ class Pynth:
             ax.set_xlim(*rng)
             ax.grid()
         
-        till = 100
+        till = 1000
         fig = plt.figure()
         ax = fig.subplot_mosaic("""AD
                                    BE
