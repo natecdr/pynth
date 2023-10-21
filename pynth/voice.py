@@ -1,6 +1,5 @@
 from pynth.wavetable import Wavetable
 import time
-from copy import deepcopy
 
 class Voice:
     def __init__(self, synth, frequency):
@@ -11,9 +10,7 @@ class Voice:
         
         self.osc1Voice = OscVoice(self.synth.osc1, self.frequency)
         self.osc2Voice = OscVoice(self.synth.osc2, self.frequency)
-        self.synth.osc1.voices.append(self.osc1Voice)
-        self.synth.osc2.voices.append(self.osc2Voice)
-        
+
         self.ampEnvVoice = EnvVoice(self.synth.ampEnv)
         self.modEnv1Voice = EnvVoice(self.synth.modEnv1)
         self.modEnv2Voice = EnvVoice(self.synth.modEnv2)
@@ -24,28 +21,34 @@ class Voice:
         self.ampEnvVoice.set_released()
         self.modEnv1Voice.set_released()
         self.modEnv2Voice.set_released()
-    
+
     def __next__(self):
         next(self.ampEnvVoice)
         next(self.modEnv1Voice)
         next(self.modEnv2Voice)
         
-        osc1_val = next(self.synth.osc1)
-        osc2_val = next(self.synth.osc2)
+        osc1_val = next(self.osc1Voice)
+        osc2_val = next(self.osc2Voice)
         
         val = osc1_val + osc2_val
         
         return val
-        
-    def clear_osc_voices(self):
-        self.synth.osc1.voices.remove(self.osc1Voice)
-        self.synth.osc2.voices.remove(self.osc2Voice)
     
 class OscVoice:
     def __init__(self, osc, frequency):
         self.osc = osc
         self.index_in_wavetable = osc.wavetable.index
         self.frequency = frequency
+        
+    def __next__(self):
+        index_increment = self.frequency.value * self.osc.wavetable.n_samples / self.osc.synth.SAMPLE_RATE
+        val, new_index = self.osc.wavetable[self.index_in_wavetable + index_increment]
+        
+        self.index_in_wavetable = new_index
+    
+        val = self.osc.apply_gain_single_val(val)
+  
+        return val
         
 class EnvVoice:
     def __init__(self, envelope):

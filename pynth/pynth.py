@@ -29,20 +29,20 @@ class Pynth:
         self.frequency = FloatParameter(440, (110, 4181))
         
         self.voices = []
-        
+
     def play(self, duration):
         self.voices.append(Voice(self, self.frequency))
         
         signal = np.zeros(int(duration*self.SAMPLE_RATE))
         for i in range(len(signal)):
             signal[i] = np.sum([next(voice) for voice in self.voices])
-            
+        
         self.voices[0].set_released()
-            
+        
         release_signal = np.zeros(int(self.voices[0].ampEnvVoice.envelope.release.value*self.SAMPLE_RATE))
         for i in range(len(release_signal)):
             release_signal[i] = np.sum([next(voice) for voice in self.voices])
-            
+        
         signal = np.concatenate((signal, release_signal))
         
         sd.play(signal, self.SAMPLE_RATE)
@@ -53,8 +53,7 @@ class Pynth:
         
     def stop_playing(self):
         sd.stop()
-        for voice in self.voices:
-            voice.clear_osc_voices()
+
         self.voices = []
         
     def plot_waves(self, osc1_signal, osc2_signal):
