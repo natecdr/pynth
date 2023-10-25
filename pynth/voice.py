@@ -32,6 +32,8 @@ class Voice:
         
         val = osc1_val + osc2_val
         
+        val = self.synth.filter.apply_filter_single_val(val)
+        
         return val
     
 class OscVoice:
@@ -47,7 +49,7 @@ class OscVoice:
         self.index_in_wavetable = new_index
     
         val = self.osc.apply_gain_single_val(val)
-  
+          
         return val
         
 class EnvVoice:
@@ -63,9 +65,7 @@ class EnvVoice:
     def __next__(self):
         envelope_value = self.envelope.get_envelope_value(self.index, self.envelope.synth.SAMPLE_RATE, release=self.release)
         for link in self.envelope.links:
-            link.value = link.base_value * envelope_value
+            link.value = (link.base_value - link.range[0]) * envelope_value + link.range[0]
             
         self.index += 1
-        
-    
         

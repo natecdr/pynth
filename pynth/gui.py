@@ -1,5 +1,4 @@
 from tkinter import *
-from tkdial import Dial
 from pynth.pynth import Pynth
 from pynth.controls import Slider
 
@@ -13,6 +12,7 @@ class PynthGUI(Tk):
         self.config(bg="gray")
         
         self.waveform_list = Variable(value=["sine", "saw", "square", "triangle"])
+        self.filter_types_list = Variable(value=["highpass", "lowpass"])
         
         #Oscillators & AmpEnv
         self.oscBox = self._createOscBox()
@@ -135,6 +135,21 @@ class PynthGUI(Tk):
         
         title = Label(filterBox, text="filter")
         title.grid(row=0, column=0)
+        
+        cutoffSlider = Slider(filterBox, orient=HORIZONTAL, resolution=0.01, synth_parameter=self.synth.filter.cutoff_frequency)
+        cutoffSlider.grid(row=1, column=0)
+        cutoffLabel = Label(filterBox, text="cutoff")
+        cutoffLabel.grid(row=2, column=0)
+        
+        def onFilterTypeChange(event):
+            w = event.widget
+            index = int(w.curselection()[0])
+            self.synth.filter.set_type(w.get(index))
+        
+        filterType = Listbox(filterBox, listvariable=self.filter_types_list, height=2, exportselection=False)
+        filterType.bind("<<ListboxSelect>>", onFilterTypeChange)
+        filterType.select_set(0)
+        filterType.grid(row=3, column=0)
         
         filterBox.grid_propagate(False)
         

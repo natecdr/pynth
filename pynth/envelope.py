@@ -9,19 +9,6 @@ class Envelope:
         self.release = FloatParameter(release, (0, 1))
         self.links = links
         
-    def apply_envelope(self, value, index, sample_rate, release = False):
-        time = index / sample_rate
-        
-        if release:
-            return self.get_release(value, time) * value
-        
-        if time < self.attack.value:
-            return self.get_attack(value, time) * value
-        elif time < self.attack.value + self.decay.value:
-            return self.get_decay(value, time) * value
-        else:
-            return value * self.sustain.value
-        
     def get_envelope_value(self, index, sample_rate, release = False):
         time = index / sample_rate
         

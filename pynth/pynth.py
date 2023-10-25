@@ -9,19 +9,20 @@ from pynth.voice import Voice
 import sounddevice as sd
 from scipy.fft import fft, fftfreq
 
-import time
+import miniaudio
 
 class Pynth:
     BUFFER_SIZE = 1024
     SAMPLE_RATE = 48000
     
     def __init__(self):
-        # self.filter = Filter()
+        self.filter = Filter(self)
         
         self.osc1 = Oscillator(self)
         self.osc2 = Oscillator(self)
         
-        self.ampEnv = Envelope(self, links=[self.osc1.volume, self.osc2.volume])
+        # self.ampEnv = Envelope(self, links=[self.osc1.volume, self.osc2.volume, self.filter.cutoff_frequency])
+        self.ampEnv = Envelope(self, links=[self.filter.cutoff_frequency])
         
         self.modEnv1 = Envelope(self)
         self.modEnv2 = Envelope(self)
@@ -37,9 +38,10 @@ class Pynth:
         for i in range(len(signal)):
             signal[i] = np.sum([next(voice) for voice in self.voices])
         
-        self.voices[0].set_released()
+        for voice in self.voices:
+            voice.set_released()
         
-        release_signal = np.zeros(int(self.voices[0].ampEnvVoice.envelope.release.value*self.SAMPLE_RATE))
+        release_signal = np.zeros(int(self.ampEnv.release.value*self.SAMPLE_RATE))
         for i in range(len(release_signal)):
             release_signal[i] = np.sum([next(voice) for voice in self.voices])
         
@@ -47,13 +49,8 @@ class Pynth:
         
         sd.play(signal, self.SAMPLE_RATE)
         
-    def play_sample(self, sample):
-        sd.play(sample, self.SAMPLE_RATE)
-        # sd.wait()
-        
     def stop_playing(self):
         sd.stop()
-
         self.voices = []
         
     def plot_waves(self, osc1_signal, osc2_signal):
